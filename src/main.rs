@@ -22,6 +22,7 @@ fn main() {
     let mut world = specs::World::new();
     let mut dispatcher = specs::DispatcherBuilder::new()
         .with_thread_local(systems::Draw)
+        .with_thread_local(systems::Control)
         .build();
 
     dispatcher.setup(&mut world.res);
@@ -29,7 +30,7 @@ fn main() {
     world.create_entity()
         .with(components::Position::new(10, 10))
         .with(components::Drawable { char: '@' })
-        //.with(components::Controllable)
+        .with(components::Controllable)
         .build();
 
     world.create_entity()
@@ -39,6 +40,13 @@ fn main() {
 
     world.add_resource(root);
 
-    dispatcher.dispatch(&world.res);
-    world.maintain();
+    loop {
+        dispatcher.dispatch(&world.res);
+
+        if world.read_resource::<console::Root>().window_closed() {
+            break;
+        }
+
+        world.maintain();
+    }
 }
