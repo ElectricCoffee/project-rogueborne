@@ -1,11 +1,16 @@
 use tcod::console::*;
 
-pub struct RootConsole {
-    pub root: Root,
+#[derive(Debug, PartialEq, Clone, Copy)]
+pub enum GameState {
+    MainMenu,
+    MapGen,
+    Game,
+    Pause,
+    Quit,
 }
 
-impl Default for RootConsole {
-    fn default() -> Self {
-        RootConsole { root: Root::initializer().init() }
+impl Default for GameState {
+    fn default() -> GameState {
+        GameState::Game
     }
 }

@@ -20,12 +20,15 @@ fn main() {
     system::set_fps(20);
 
     let mut world = specs::World::new();
-    let mut dispatcher = specs::DispatcherBuilder::new()
+
+    world.add_resource(resources::GameState::Game);
+
+    let mut game_dispatcher = specs::DispatcherBuilder::new()
         .with_thread_local(systems::Draw)
         .with_thread_local(systems::Control)
         .build();
 
-    dispatcher.setup(&mut world.res);
+    game_dispatcher.setup(&mut world.res);
 
     world.create_entity()
         .with(components::Position::new(10, 10))
@@ -41,7 +44,15 @@ fn main() {
     world.add_resource(root);
 
     loop {
-        dispatcher.dispatch(&world.res);
+        use resources::GameState::*;
+
+        match *world.read_resource::<resources::GameState>() {
+            MainMenu => {}
+            MapGen => {}
+            Game => game_dispatcher.dispatch(&world.res),
+            Pause => {}
+            Quit => {}
+        }
 
         if world.read_resource::<console::Root>().window_closed() {
             break;
