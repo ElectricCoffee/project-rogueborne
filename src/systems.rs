@@ -37,15 +37,22 @@ impl<'a> System<'a> for Control {
     );
 
     fn run(&mut self, (mut root, mut pos, _control): Self::SystemData) {
+        use KeyCode::{Up, Down, Left, Right, Home, End, PageUp, PageDown};
         use specs::Join;
         
         for (pos, _) in (&mut pos, &_control).join() {
             match root.wait_for_keypress(false) {
-                Key { code: KeyCode::Up   , .. } => pos.y -= 1,
-                Key { code: KeyCode::Down , .. } => pos.y += 1,
-                Key { code: KeyCode::Left , .. } => pos.x -= 1,
-                Key { code: KeyCode::Right, .. } => pos.x += 1,
-                _                                => Default::default(),
+                // cardinals
+                Key { code: Up   , .. } => pos.y -= 1,
+                Key { code: Down , .. } => pos.y += 1,
+                Key { code: Left , .. } => pos.x -= 1,
+                Key { code: Right, .. } => pos.x += 1,
+                // diagonals
+                Key { code: Home    , .. } => { pos.x -= 1; pos.y -= 1 }
+                Key { code: PageUp  , .. } => { pos.x += 1; pos.y -= 1 }
+                Key { code: End     , .. } => { pos.x -= 1; pos.y += 1 }
+                Key { code: PageDown, .. } => { pos.x += 1; pos.y += 1 }
+                _ => Default::default(),
             }
         }
     }
