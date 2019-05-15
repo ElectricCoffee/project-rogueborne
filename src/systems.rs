@@ -1,4 +1,6 @@
 // The code in this project is licenced under the GNU General Public Licence 3.0
+pub mod map;
+
 use specs::prelude::*;
 use tcod::*;
 use tcod::input::*;
