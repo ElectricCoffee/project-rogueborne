@@ -7,17 +7,19 @@ use tcod::input::*;
 
 use crate::{
     components::*,
+    resources::Map,
 };
 
 pub struct Draw;
 impl<'a> System<'a> for Draw {
     type SystemData = (
+        Read<'a, Map>,
         WriteExpect<'a, console::Root>,
         ReadStorage<'a, Position>,
         ReadStorage<'a, Drawable>
     );
 
-    fn run(&mut self, (mut root, pos, drw): Self::SystemData) {
+    fn run(&mut self, (map, mut root, pos, drw): Self::SystemData) {
         use specs::Join;
 
         root.clear();
