@@ -27,6 +27,10 @@ impl Tile {
     pub fn wall() -> Tile {
         Tile { char: '#', is_blocked: true, blocks_sight: true, is_explored: false }
     }
+
+    pub fn dirt() -> Tile {
+        Tile { char: '"', is_blocked: false, blocks_sight: false, is_explored: false }
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -43,5 +47,13 @@ impl Map {
             height,
             map: vec![Tile::wall(); (width * height) as usize],
         }
+    }
+
+    pub fn iter(&self) -> std::slice::Iter<Tile> {
+        self.map.iter()
+    }
+
+    pub fn iter_mut(&mut self) -> std::slice::IterMut<Tile> {
+        self.map.iter_mut()
     }
 }

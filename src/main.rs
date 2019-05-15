@@ -6,14 +6,16 @@ mod resources;
 use tcod::*;
 use specs::prelude::*;
 
-pub const SCREEN_WIDTH: i32 = 80;
-pub const SCREEN_HEIGHT: i32 = 50;
+pub const SCREEN_WIDTH: u32 = 80;
+pub const SCREEN_HEIGHT: u32 = 50;
+pub const MAP_HEIGHT: u32 = SCREEN_HEIGHT - 5;
+pub const MAP_WIDTH: u32 = SCREEN_WIDTH;
 
 fn main() {
     let root = console::Root::initializer()
         .font("assets/font.png", FontLayout::AsciiInRow)
         .font_type(FontType::Greyscale)
-        .size(SCREEN_WIDTH, SCREEN_HEIGHT)
+        .size(SCREEN_WIDTH as i32, SCREEN_HEIGHT as i32)
         .title("Project Rogueborne")
         .init();
 
@@ -22,6 +24,7 @@ fn main() {
     let mut world = specs::World::new();
 
     world.add_resource(resources::GameState::Game);
+    world.add_resource(resources::Map::new(MAP_WIDTH, MAP_HEIGHT));
 
     let mut game_dispatcher = specs::DispatcherBuilder::new()
         .with_thread_local(systems::Draw)
