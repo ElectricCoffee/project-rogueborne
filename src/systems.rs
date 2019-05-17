@@ -10,6 +10,7 @@ use crate::{
     resources::Map,
 };
 
+/// Draws the contents of the game onto the screen.
 pub struct Draw;
 impl<'a> System<'a> for Draw {
     type SystemData = (
@@ -23,6 +24,22 @@ impl<'a> System<'a> for Draw {
         use specs::Join;
 
         root.clear();
+
+        for y in 0 .. crate::MAP_HEIGHT {
+            for x in 0 .. crate::MAP_WIDTH {
+                let tile = map.get_tile(x as usize, y as usize);
+                
+                if let Some(color) = tile.background_color {
+                    root.set_char_background(x as i32, y as i32, color, BackgroundFlag::Set);
+                }
+
+                root.put_char(x as i32, y as i32, tile.char, BackgroundFlag::None);
+
+                if let Some(color) = tile.foreground_color {
+                    root.set_char_foreground(x as i32, y as i32, color);
+                }
+            }
+        }
 
         for (pos, drw) in (&pos, &drw).join() {
             root.put_char(pos.x, pos.y, drw.char, BackgroundFlag::None);
